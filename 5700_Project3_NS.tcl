@@ -107,9 +107,9 @@ $ns attach-agent $n3 $udpN3
 $ns connect $tcpSourceN1 $tcpSinkN4
 $ns connect $udpN2 $udpN3
 
-$ns at 0.0 "$updpCBR start"
+$ns at 0.0 "$udpCBR start"
 $ns at 5.0 "$tcpSourceN1 start"
-$ns at 50.0 "updpCBR stop"
+$ns at 50.0 "udpCBR stop"
 $ns at 55.0 "$tcpSourceN1 stop"
 
 $ns at 60 "finish"
