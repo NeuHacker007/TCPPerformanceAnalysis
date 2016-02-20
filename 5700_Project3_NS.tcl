@@ -68,7 +68,7 @@ $ns duplex-link $n3 $n6 [expr $bindwidth]Mb 10ms DropTail
 ######################################################################################################################
 
 # set n1 as tcp source
-set tcpSourceN1 [new Agent/[expr $defaultTCPVariant]] 
+set tcpSourceN1 [new Agent/$defaultTCPVariant] 
 $ns attach-agent $n1 $tcpSourceN1
 
 #############################################################################
@@ -81,9 +81,12 @@ $ns attach-agent $n1 $tcpSourceN1
 #############################################################################
 
 # set n4 as tcp sink 
-set tcpSinkN4 [new Agent/[expr $defaultTCPSink]]
+set tcpSinkN4 [new Agent/$defaultTCPSink]
 $ns attach-agent $n4 $tcpSinkN4
 
+#CBR source 
+set udpN2 [new Agent/UDP]
+$ns attach-agent $n2 $udpN2
 
 #CBR (constant bit rate) with UDP connection
 set udpCBR [new Application/traffic/CBR]
@@ -91,9 +94,7 @@ $udpCBR set packetSize_ 500
 $udpCBR set interval_ 0.005
 $udpCBR attach-agent $udpN2
 
-#CBR source 
-set udpN2 [new Agent/UDP]
-$ns attach-agent $n2 $udpN2
+
 
 #set udp sink for N3
 set udpN3 [new Agent/Null]
@@ -103,3 +104,13 @@ $ns attach-agent $n3 $udpN3
 #TCP connection 
 $ns connect $tcpSourceN1 $tcpSinkN4
 $ns connect $udpN2 $udpN3
+#TCP connection 
+$ns connect $tcpSourceN1 $tcpSinkN4
+$ns connect $udpN2 $udpN3 
+
+$ns at 0.0 "$updpCBR start"
+$ns at 5.0 "$tcpSourceN1 start"
+$ns at 50.0 "updpCBR stop"
+$ns at 55.0 "$tcpSourceN1 stop"
+
+$ns at 60 "finish"
