@@ -55,7 +55,7 @@ $ns duplex-link $n2 $n3 10Mb 10ms DropTail
 $ns duplex-link $n3 $n4 10Mb 10ms DropTail
 $ns duplex-link $n3 $n6 10Mb 10ms DropTail
 
-
+puts "nodes link setted up"
 ######################################################################################################################
 # The one-way TCP sending agents currently supported are:															 #	
 #																													 #
@@ -71,7 +71,7 @@ $ns duplex-link $n3 $n6 10Mb 10ms DropTail
 # set n1 as tcp source
 set tcpSourceN1 [new Agent/TCP] 
 $ns attach-agent $n1 $tcpSourceN1
-
+puts "tcp source setted up"
 #############################################################################
 #The one-way TCP receiving agents currently supported are:					#
 #																			#
@@ -84,18 +84,18 @@ $ns attach-agent $n1 $tcpSourceN1
 # set n4 as tcp sink 
 set tcpSinkN4 [new Agent/TCPSink]
 $ns attach-agent $n4 $tcpSinkN4
-
+puts "TCPSink setted up"
 #CBR source 
 set udpN2 [new Agent/UDP]
 $ns attach-agent $n2 $udpN2
-
+puts "UDPN2 source set up"
 #CBR (constant bit rate) with UDP connection
 set udpCBR [new Application/Traffic/CBR]
 $udpCBR set type_ CBR
 $udpCBR set packetSize_ 500
 $udpCBR set interval_ 0.005
 $udpCBR attach-agent $udpN2
-
+puts "CBR setup"
 
 
 #set udp sink for N3
@@ -105,12 +105,20 @@ $ns attach-agent $n3 $udpN3
 
 #TCP connection 
 $ns connect $tcpSourceN1 $tcpSinkN4
+puts "TCP conneted"
 $ns connect $udpN2 $udpN3
+puts "UDP connected"
 
 $ns at 0.0 "$udpCBR start"
+puts "udpCBR started"
 $ns at 5.0 "$tcpSourceN1 start"
+puts "tcp started"
 $ns at 50.0 "udpCBR stop"
+puts "udpCBR stop"
 $ns at 55.0 "$tcpSourceN1 stop"
+puts "TCP stop"
 
 $ns at 60 "finish"
-$ns run 
+puts "run before"
+$ns run
+puts "run after" 
