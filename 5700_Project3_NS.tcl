@@ -21,7 +21,8 @@
 set ns [new Simulator]
 
 #save reults to a file
-set nf [open result.txt	w]
+set nf [open result.tr	w]
+$ns trace-all $nf
 
 #define notes
 set n1 [$ns node]
@@ -39,20 +40,20 @@ proc finish {} {
         close $nf
 	#Execute nam on the trace file
       #  exec nam out.nam &
-      #  exit 0
+      exit 0
 }
 
 
 # set bindwidth with 10 
-set bindwidth 10
-set defaultTCPVariant TCP
-set defaultTCPSink TCPSink  
+#set bindwidth 10
+#set defaultTCPVariant TCP
+#set defaultTCPSink TCPSink  
 # connect each node
-$ns duplex-link $n1 $n2 [expr $bindwidth]Mb 10ms DropTail
-$ns duplex-link $n5 $n2 [expr $bindwidth]Mb 10ms DropTail
-$ns duplex-link $n2 $n3 [expr $bindwidth]Mb 10ms DropTail
-$ns duplex-link $n3 $n4 [expr $bindwidth]Mb 10ms DropTail
-$ns duplex-link $n3 $n6 [expr $bindwidth]Mb 10ms DropTail
+$ns duplex-link $n1 $n2 10Mb 10ms DropTail
+$ns duplex-link $n5 $n2 10Mb 10ms DropTail
+$ns duplex-link $n2 $n3 10Mb 10ms DropTail
+$ns duplex-link $n3 $n4 10Mb 10ms DropTail
+$ns duplex-link $n3 $n6 10Mb 10ms DropTail
 
 
 ######################################################################################################################
@@ -68,7 +69,7 @@ $ns duplex-link $n3 $n6 [expr $bindwidth]Mb 10ms DropTail
 ######################################################################################################################
 
 # set n1 as tcp source
-set tcpSourceN1 [new Agent/$defaultTCPVariant] 
+set tcpSourceN1 [new Agent/TCP] 
 $ns attach-agent $n1 $tcpSourceN1
 
 #############################################################################
@@ -81,7 +82,7 @@ $ns attach-agent $n1 $tcpSourceN1
 #############################################################################
 
 # set n4 as tcp sink 
-set tcpSinkN4 [new Agent/$defaultTCPSink]
+set tcpSinkN4 [new Agent/TCPSink]
 $ns attach-agent $n4 $tcpSinkN4
 
 #CBR source 
@@ -89,7 +90,8 @@ set udpN2 [new Agent/UDP]
 $ns attach-agent $n2 $udpN2
 
 #CBR (constant bit rate) with UDP connection
-set udpCBR [new Application/traffic/CBR]
+set udpCBR [new Application/Traffic/CBR]
+$udpCBR set type_ CBR
 $udpCBR set packetSize_ 500
 $udpCBR set interval_ 0.005
 $udpCBR attach-agent $udpN2
@@ -104,9 +106,6 @@ $ns attach-agent $n3 $udpN3
 #TCP connection 
 $ns connect $tcpSourceN1 $tcpSinkN4
 $ns connect $udpN2 $udpN3
-#TCP connection 
-$ns connect $tcpSourceN1 $tcpSinkN4
-$ns connect $udpN2 $udpN3 
 
 $ns at 0.0 "$updpCBR start"
 $ns at 5.0 "$tcpSourceN1 start"
@@ -114,3 +113,4 @@ $ns at 50.0 "updpCBR stop"
 $ns at 55.0 "$tcpSourceN1 stop"
 
 $ns at 60 "finish"
+$ns run 
