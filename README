@@ -1,0 +1,144 @@
+#############################################################################
+# Project: Performance Analysis of TCP Variants
+# Author: @Yifan Zhang (zhang.yifan2@husky.neu.edu)
+# 
+# Date: 02/18/2016		
+#############################################################################
+
+0x01 How do we interpret the data 
+
+In this paper, we want to investigate how does the network behaves when each TCP variants varies and with the bindwidth changing and what the performance
+of this network when these variables changes. Then we are going to simulate the following three experiments.
+
+#########################################################################################
+# topology:
+#			N1                                    N4
+#			  \									 /	
+#			   \								/ 
+#			    \							   /
+#			     \							  / 
+#			      N2------------------------N3
+#			     /							  \ 	
+#			    /							   \	
+#			   /								\
+#			  /									 \
+#			N5									  N6
+##########################################################################################	
+
+1. TCP Performance Under Congestion 
+We use the topology listed below and test the three major TCP variants - Tahoe, NewReno, and Vagas congestion performance when the bindwidth changes and
+also the performance when the start time of each TCP flow changes for instance 0.5 s delay. Basicly, we are going to adopt controlling variable method to analysis
+it. For each variants, we are going to do the following things like that, for intance one TCP flow and one UDP constant bit rate flow, the UDP flow with fixed 
+bindwidth and the TCP flow will mutate its bindwidth with the same start time such as UDP always start 0.5 s ahead of TCP flow. Then we are going to test with the 
+same bandwith, how does it will impact the congestion. In order to make our experiments more reliable, we will run the simulation for many times under different 
+network environment like home network and Neu network, after we got bunch of results, we will filter out significant outier which might generated through the 
+environmental noises around the network. 
+
+2. Fairness Between TCP Variants
+In this senario, we are going to compare the fairness of different TCP variants. Due to the different implementation, their performance might vary a lot. Basically,
+we still use controlling variable method to do series of experiments on the performance each TCP variants. For example, we use the Reno combine with both itself and
+NewReno and start TCP flows in different conditions then we are going to analysis the results we get from the experiments. In order to keep this results reliable, we
+two in the team will do the experiments separately from home network and NEU network and also we will filter out major significant outiers and keep all the results 
+inclind to a trend which we can interpret it well.
+
+3. Influence of Queuing
+In this senario, we are going to test the impact of the queue parameter which defines how the packets will be treated in the queue. We still use the topology mentioned
+in senario 1 and we will still use control variable method to perform the experiments. As we want to keep the results more reliable, so we will filter out the significant
+outiers so that we can make this data stable and meaningful. 
+
+# generlize the findings 
+Although we get a lot of experimental results, it still might not fit every situation in real network topology because of the complexity of today's network infrastructure
+and implementations. So, in this case, we use the following ways to make it as general as possible. Our core thought is to reduce the variable things which means that we
+will make our procedure regardless of things like OS, network capability etc. We will employ statistical method such as regression analysis, variance analysis to make it
+generalize. Plus, we are going to get facts with same experiments controls in different situations like different network capability and OS etc. Furthermore, we will use
+other tools like NetworkKit to verify our finds.
+
+
+0x02 test cases 
+
+1. TCP Performance Under Congestion 
+
+In this case, we start CBR flow first which is considered as first flow and TCP flow as second flow which is start certain seconds later than CBR
+
+------------------------------------------------------------------------------------------------------------------------------------------------- 
+| number	| source node  | destinate node  | bindwidth |  flow Type | first flow start time  | second flow start time | 	Performance  		|  
+| 	1			N1				N4 				10 MB 		CBR			  	 	0 			  			5s 					experiments results
+| 	2			N1				N4 				10 MB 		CBR			  	 	0 			  			10s					experiments results	
+| 	3			N1				N4 				10 MB 		CBR			  	 	0 			  			15s  				experiments results
+| 	4			N1				N4				5 MB		CBR				 	0                       5s					experiments results
+| 	5			N1				N4				5 MB		CBR				 	0                       10s					experiments results
+| 	6			N1				N4				5 MB		CBR				 	0                       15s					experiments results   
+| 	7			N1				N4				1 MB        CBR				 	0                       5s					experiments results
+| 	8			N1				N4				1 MB        CBR				 	0                       10s					experiments results
+| 	9			N1				N4				1 MB        CBR				 	0                       15s					experiments results     
+|	10 			N2              N3 				10 MB 		TCP/Tahoe			0 						5s  				experiments results
+|	11 			N2              N3 				10 MB 		TCP/Tahoe			0 						10s  				experiments results
+|	12 			N2              N3 				10 MB 		TCP/Tahoe			0 						15s  				experiments results
+|	13 			N2              N3 				5 MB 		TCP/Tahoe			0 						5s  				experiments results
+|	14 			N2              N3 				5 MB 		TCP/Tahoe			0 						10s  				experiments results
+|	15 			N2              N3 				5 MB 		TCP/Tahoe			0 						15s  				experiments results
+|	16 			N2              N3 				1 MB 		TCP/Tahoe			0 						5s  				experiments results
+|	17 			N2              N3 				1 MB 		TCP/Tahoe			0 						10s  				experiments results
+|	18 			N2              N3 				1 MB 		TCP/Tahoe			0 						15s  				experiments results
+|	19 			N2              N3 				10 MB 		TCP/Reno 			0 						5s  				experiments results
+|	20 			N2              N3 				10 MB 		TCP/Reno			0 						10s  				experiments results
+|	21 			N2              N3 				10 MB 		TCP/Reno			0 						15s  				experiments results
+|	22 			N2              N3 				5 MB 		TCP/Reno			0 						5s  				experiments results
+|	23 			N2              N3 				5 MB 		TCP/Reno			0 						10s  				experiments results
+|	24 			N2              N3 				5 MB 		TCP/Reno			0 						15s  				experiments results	
+|	25 			N2              N3 				1 MB 		TCP/Reno			0 						5s  				experiments results
+|	26 			N2              N3 				1 MB 		TCP/Reno			0 						10s  				experiments results
+|	27 			N2              N3 				1 MB 		TCP/Reno			0 						15s  				experiments results
+|	28 			N2              N3 				10 MB 		TCP/NewReno			0 						5s  				experiments results
+|	29 			N2              N3 				10 MB 		TCP/NewReno			0 						10s  				experiments results
+|	30 			N2              N3 				10 MB 		TCP/NewReno			0 						15s  				experiments results
+|	31 			N2              N3 				5 MB 		TCP/NewReno			0 						5s  				experiments results
+|	32 			N2              N3 				5 MB 		TCP/NewReno			0 						10s  				experiments results
+|	33 			N2              N3 				5 MB 		TCP/NewReno			0 						15s  				experiments results	
+|	34 			N2              N3 				1 MB 		TCP/NewReno			0 						5s  				experiments results
+|	35 			N2              N3 				1 MB 		TCP/NewReno			0 						10s  				experiments results
+|	36 			N2              N3 				1 MB 		TCP/NewReno			0 						15s  				experiments results
+|	37 			N2              N3 				10 MB 		TCP/Vagas			0 						5s  				experiments results
+|	38 			N2              N3 				10 MB 		TCP/Vagas			0 						10s  				experiments results
+|	39 			N2              N3 				10 MB 		TCP/Vagas			0 						15s  				experiments results
+|	40 			N2              N3 				5 MB 		TCP/Vagas			0 						5s  				experiments results
+|	41 			N2              N3 				5 MB 		TCP/Vagas			0 						10s  				experiments results
+|	42 			N2              N3 				5 MB 		TCP/Vagas			0 						15s  				experiments results	
+|	43 			N2              N3 				1 MB 		TCP/Vagas			0 						5s  				experiments results
+|	44 			N2              N3 				1 MB 		TCP/Vagas			0 						10s  				experiments results
+|	45 			N2              N3 				1 MB 		TCP/Vagas			0 						15s  				experiments results		
+|	
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. Fairness Between TCP Variants
+
+In this experiment, we have one CBR flow, two TCP flow, we are going to see different pair of TCP variants combination's fairness
+
+------------------------------------------------------------------------------------------------------------------------------------------------- 
+| number	| source node  | destinate node  | bindwidth |  flow Type 		|  start time | 	fairness 	  		|  
+| 	1			N2				N3 				10 MB 		CBR				  		5s 			experiments results
+| 	2			N1				N4 				10 MB 		TCP/Reno				10s			experiments results	
+| 	3			N5				N6 				10 MB 		TCP/Reno 				15s  		experiments results
+| 	4			N2				N3 				10 MB 		CBR				  		5s 			experiments results
+| 	5			N1				N4 				10 MB 		TCP/NewReno				10s			experiments results	
+| 	6			N5				N6 				10 MB 		TCP/Reno 				15s  		experiments results
+| 	7			N2				N3 				10 MB 		CBR				  		5s 			experiments results
+| 	8			N1				N4 				10 MB 		TCP/Vagas				10s			experiments results	
+| 	9			N5				N6 				10 MB 		TCP/Vagas 				15s  		experiments results
+| 	10			N2				N3 				10 MB 		CBR				  		5s 			experiments results
+| 	11			N1				N4 				10 MB 		TCP/NewReno				10s			experiments results	
+| 	12			N5				N6 				10 MB 		TCP/Vagas 				15s  		experiments results
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Influence of Queuing
+
+In this case, we are going to judge the influence of chaning queue settings which defines how the packets are treated. We have two flows in the topology
+which are one CBR flow from N5 to N6, TCP flow from N1 to N4. TCP start first 
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+| number	| source node  | destinate node  | bindwidth |  flow Type	|   queue type   | first flow start time  | second flow start time | 	influences 		|  
+| 	1			N5				N6 				10 MB 		CBR			  	 N/A 				0 			  			5s 					experiments results
+| 	2			N1				N4 				10 MB 		TCP			  	 DropTail			0 			  			5s					experiments results
+| 	3			N5				N6 				10 MB 		CBR			  	 N/A 				0 			  			5s 					experiments results	
+| 	4			N1				N4 				10 MB 		TCP			  	 RED 				0 			  			5s					experiments results
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------  
