@@ -42,7 +42,7 @@ proc finish {} {
         close $nf
         close $NamFlie
 	#Execute nam on the trace file
-      exec nam out.nam &
+      exec nam e1-1.nam &
       exit 0
 }
 
@@ -127,6 +127,6 @@ puts "TCP stop"
 
 $ns at 60 "finish"
 puts "run before"
-$ns run
-$ns make
-puts "run after" 
+#$ns make
+#$ns run
+#puts "run after" 
