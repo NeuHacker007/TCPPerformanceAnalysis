@@ -43,7 +43,7 @@ proc finish {} {
         $ns flush-trace
 		puts "trace file is flushed"
 	#Close the trace file
-        close $nf
+        close $TraceFile
 		puts "trace file is closed"
 	#Execute nam on the trace file
 	  puts "nam invoked"
