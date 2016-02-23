@@ -106,7 +106,9 @@ puts "TCPSink setted up"
 $ns connect $tcpSource $tcpSink
 puts "TCP conneted"
 
-
+set ftp1 [new Application/FTP]
+$ftp1 attach-agent $tcpSource
+$ftp1 set type_ FTP 
 #CBR source 
 set udp1 [new Agent/UDP]
 $udp1 set fid_ 2
@@ -132,9 +134,9 @@ puts "UDP connected"
 
 
 $ns at 0.5 "$udpCBR start"
-$ns at 5.0 "$tcpSource start"
+$ns at 5.0 "$ftp1 start"
 $ns at 10.0 "$udpCBR stop"
-$ns at 20.5 "$tcpSource stop"
+$ns at 20.5 "$ftp1 stop"
 #Call the finish procedure after 5 seconds of simulation time
 $ns at 25.0 "finish"
 
