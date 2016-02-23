@@ -128,4 +128,5 @@ puts "TCP stop"
 $ns at 60 "finish"
 puts "run before"
 $ns run
+$ns make
 puts "run after" 
