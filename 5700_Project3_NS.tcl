@@ -25,7 +25,7 @@ set nf [open result.tr	w]
 $ns trace-all $nf
 
 set NamFlie [open e1-1.nam w]
-$ns nametrace-all $NamFlie
+$ns namtrace-all $NamFlie
 #define notes
 set n1 [$ns node]
 set n2 [$ns node]
