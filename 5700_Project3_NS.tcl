@@ -39,10 +39,14 @@ set n5 [$ns node]
 #Define a 'finish' procedure
 proc finish {} {
         global ns nf NamFlie
+		puts "we are now in finish procedure"
         $ns flush-trace
+		puts "trace file is flushed"
 	#Close the trace file
         close $nf
+		puts "trace file is closed"
 	#Execute nam on the trace file
+	  puts "nam invoked"
       exec nam e1-1.nam &
       exit 0
 }
@@ -70,7 +74,7 @@ $ns duplex-link $n0 $n1 10Mb 10ms DropTail
 $ns duplex-link $n1 $n2 10Mb 10ms DropTail
 $ns duplex-link $n2 $n3 10Mb 10ms DropTail
 $ns duplex-link $n1 $n4 10Mb 10ms DropTail
-$ns duplex-link $n2 $n6 10Mb 10ms DropTail
+$ns duplex-link $n2 $n5 10Mb 10ms DropTail
 
 puts "nodes link setted up"
 ######################################################################################################################
@@ -131,12 +135,11 @@ $ns attach-agent $n2 $udpSink
 $ns connect $udp1 $udpSink
 puts "UDP connected"
 
-
-
 $ns at 0.5 "$udpCBR start"
 $ns at 5.0 "$ftp1 start"
 $ns at 10.0 "$udpCBR stop"
 $ns at 20.5 "$ftp1 stop"
+
 #Call the finish procedure after 5 seconds of simulation time
 $ns at 25.0 "finish"
 
