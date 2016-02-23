@@ -24,6 +24,8 @@ set ns [new Simulator]
 set nf [open result.tr	w]
 $ns trace-all $nf
 
+set NamFlie [open e1-1.nam w]
+$ns nametrace-all $NamFlie
 #define notes
 set n1 [$ns node]
 set n2 [$ns node]
@@ -34,12 +36,13 @@ set n6 [$ns node]
 
 #Define a 'finish' procedure
 proc finish {} {
-        global ns nf
+        global ns nf NamFlie
         $ns flush-trace
 	#Close the trace file
         close $nf
+        close $NamFlie
 	#Execute nam on the trace file
-      #  exec nam out.nam &
+      exec nam out.nam &
       exit 0
 }
 
@@ -85,6 +88,10 @@ puts "tcp source setted up"
 set tcpSinkN4 [new Agent/TCPSink]
 $ns attach-agent $n4 $tcpSinkN4
 puts "TCPSink setted up"
+$ns connect $tcpSourceN1 $tcpSinkN4
+puts "TCP conneted"
+$tcpSourceN1 set fid_ 1
+
 #CBR source 
 set udpN2 [new Agent/UDP]
 $ns attach-agent $n2 $udpN2
@@ -104,10 +111,10 @@ $ns attach-agent $n3 $udpN3
 
 
 #TCP connection 
-$ns connect $tcpSourceN1 $tcpSinkN4
-puts "TCP conneted"
+
 $ns connect $udpN2 $udpN3
 puts "UDP connected"
+$udpN2 set fid_ 2
 
 $ns at 0.0 "$udpCBR start"
 puts "udpCBR started"
