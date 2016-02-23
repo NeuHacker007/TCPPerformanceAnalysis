@@ -19,20 +19,22 @@
 
 # create new simulator object
 set ns [new Simulator]
-
+$ns color 1 Blue
+$ns color 2 Red
 #save reults to a file
-set nf [open result.tr	w]
-$ns trace-all $nf
+set TraceFile [open e1-1.tr	w]
+$ns trace-all $TraceFile
 
 set NamFlie [open e1-1.nam w]
 $ns namtrace-all $NamFlie
+
 #define notes
+set n0 [$ns node]
 set n1 [$ns node]
 set n2 [$ns node]
 set n3 [$ns node]
 set n4 [$ns node]
 set n5 [$ns node]
-set n6 [$ns node]
 
 #Define a 'finish' procedure
 proc finish {} {
@@ -40,7 +42,6 @@ proc finish {} {
         $ns flush-trace
 	#Close the trace file
         close $nf
-        close $NamFlie
 	#Execute nam on the trace file
       exec nam e1-1.nam &
       exit 0
@@ -50,13 +51,26 @@ proc finish {} {
 # set bindwidth with 10 
 #set bindwidth 10
 #set defaultTCPVariant TCP
-#set defaultTCPSink TCPSink  
+#set defaultTCPSink TCPSink
+# topology:
+#			N0                                    N3
+#			  \									 /	
+#			   \								/ 
+#			    \							   /
+#			     \							  / 
+#			      N1------------------------N2
+#			     /							  \ 	
+#			    /							   \	
+#			   /								\
+#			  /									 \
+#			N4									  N5			
+#############################################################################  
 # connect each node
+$ns duplex-link $n0 $n1 10Mb 10ms DropTail
 $ns duplex-link $n1 $n2 10Mb 10ms DropTail
-$ns duplex-link $n5 $n2 10Mb 10ms DropTail
 $ns duplex-link $n2 $n3 10Mb 10ms DropTail
-$ns duplex-link $n3 $n4 10Mb 10ms DropTail
-$ns duplex-link $n3 $n6 10Mb 10ms DropTail
+$ns duplex-link $n1 $n4 10Mb 10ms DropTail
+$ns duplex-link $n2 $n6 10Mb 10ms DropTail
 
 puts "nodes link setted up"
 ######################################################################################################################
@@ -72,8 +86,9 @@ puts "nodes link setted up"
 ######################################################################################################################
 
 # set n1 as tcp source
-set tcpSourceN1 [new Agent/TCP] 
-$ns attach-agent $n1 $tcpSourceN1
+set tcpSource [new Agent/TCP]
+$tcpSource set fid_ 1 
+$ns attach-agent $n0 $tcpSource
 puts "tcp source setted up"
 #############################################################################
 #The one-way TCP receiving agents currently supported are:					#
@@ -85,48 +100,55 @@ puts "tcp source setted up"
 #############################################################################
 
 # set n4 as tcp sink 
-set tcpSinkN4 [new Agent/TCPSink]
-$ns attach-agent $n4 $tcpSinkN4
+set tcpSink [new Agent/TCPSink]
+$ns attach-agent $n3 $tcpSink
 puts "TCPSink setted up"
-$ns connect $tcpSourceN1 $tcpSinkN4
+$ns connect $tcpSource $tcpSink
 puts "TCP conneted"
-$tcpSourceN1 set fid_ 1
+
 
 #CBR source 
-set udpN2 [new Agent/UDP]
-$ns attach-agent $n2 $udpN2
-puts "UDPN2 source set up"
+set udp1 [new Agent/UDP]
+$udp1 set fid_ 2
+$ns attach-agent $n1 $udp1
+puts "UDP1 source set up"
 #CBR (constant bit rate) with UDP connection
 set udpCBR [new Application/Traffic/CBR]
 $udpCBR set type_ CBR
 $udpCBR set packetSize_ 500
 $udpCBR set interval_ 0.005
-$udpCBR attach-agent $udpN2
+$udpCBR attach-agent $udp1
 puts "CBR setup"
 
 
-#set udp sink for N3
-set udpN3 [new Agent/Null]
-$ns attach-agent $n3 $udpN3
+#set udp sink for N2
+set udpSink [new Agent/Null]
+$ns attach-agent $n2 $udpSink
 
-
-#TCP connection 
-
-$ns connect $udpN2 $udpN3
+#UDP connection 
+$ns connect $udp1 $udpSink
 puts "UDP connected"
-$udpN2 set fid_ 2
 
-$ns at 0.0 "$udpCBR start"
-puts "udpCBR started"
-$ns at 5.0 "$tcpSourceN1 start"
-puts "tcp started"
-$ns at 50.0 "udpCBR stop"
-puts "udpCBR stop"
-$ns at 55.0 "$tcpSourceN1 stop"
-puts "TCP stop"
 
-$ns at 60 "finish"
-puts "run before"
+
+$ns at 0.5 "$udpCBR start"
+$ns at 5.0 "$tcpSource start"
+$ns at 10.0 "$udpCBR stop"
+$ns at 20.5 "$tcpSource stop"
+#Call the finish procedure after 5 seconds of simulation time
+$ns at 25.0 "finish"
+
+#$ns at 0.0 "$udpCBR start"
+#puts "udpCBR started"
+#$ns at 5.0 "$tcpSourceN1 start"
+#puts "tcp started"
+#$ns at 50.0 "udpCBR stop"
+#puts "udpCBR stop"
+#$ns at 55.0 "$tcpSourceN1 stop"
+#puts "TCP stop"
+
+#$ns at 60 "finish"
+#puts "run before"
 #$ns make
-#$ns run
+$ns run
 #puts "run after" 
