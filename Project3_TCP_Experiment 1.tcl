@@ -22,6 +22,7 @@ $ns color 1 Blue
 $ns color 2 Red
 set print 1
 # recieve environment arguments
+
     if {$print} {
         puts "no args entry"
     }
@@ -31,7 +32,7 @@ set print 1
     # tcpEndTime 20s after NS running
     # bandwidth 10 MB
     # delay 10ms
-    set tcpVariant "Tahoe"
+    set tcpVariant Tahoe
     set CBRRate 5
     set tcpStartTime 5.0
     set tcpEndTime   15.0
@@ -46,19 +47,22 @@ set print 1
 
 
 # generate trace file
-set tracefile [open epr1_result_[expr $tcpVariant]_[expr $CBRRate]_[expr $bandwidth]_[expr $delay].tr w]
+set tracefile [open epr1_result_$tcpVariant\_$CBRRate\_$bandwidth\_$delay\.tr w]
 $ns trace-all $tracefile
 if {$print} {
         puts "tracefile created"
 }
-set namTracefile [open epr1_result_[expr $tcpVariant]_[expr $CBRRate]_[expr $bandwidth]_[expr $delay].nam w]
-$ns trace-all $namTracefile
+set namTracefile [open epr1_result_$tcpVariant\_$CBRRate\_$bandwidth\_$delay\.nam w]
+$ns namtrace-all $namTracefile
 if {$print} {
         puts "namTracefile created"
 }
-proc finish {
-    global ns tracefile namTracefile
+proc finish {} {
+    global print ns tracefile namTracefile
     $ns flush-trace
+	if {$print} {
+	 puts "trace flushed"
+	}
     close $tracefile
     close $namTracefile
     exit 0
@@ -82,15 +86,15 @@ $ns duplex-link $n5 $n2 [expr $bandwidth]Mb [expr $delay]ms DropTail
 $ns duplex-link $n3 $n6 [expr $bandwidth]Mb [expr $delay]ms DropTail   
 
 #define nodes position
-$ns duplex-link $n1 $n2 orient left-up
-$ns duplex-link $n5 $n2 orient left-down
-$ns duplex-link $n2 $n3 orient right
-$ns duplex-link $n3 $n4 orient right-up
-$ns duplex-link $n3 $n6 orient right-down 
+#$ns duplex-link $n1 $n2 orient right-up 
+#$ns duplex-link $n5 $n2 orient right-down
+#$ns duplex-link $n2 $n3 orient right
+#$ns duplex-link $n3 $n4 orient right-up
+#$ns duplex-link $n3 $n6 orient right-down 
 
 
 #set up udp 
-set upd [new Agent/UDP]
+set udp [new Agent/UDP]
 $ns attach-agent $n2 $udp
 $udp set fid_ 1
 
@@ -116,22 +120,22 @@ if {$print} {
         puts "tcp variant $tcpVariant"
 }
 #TCP settings 
-if {$tcpVariant eq "Tahoe"} {
+if {$tcpVariant=="Tahoe"} {
     set tcp [new Agent/TCP]
     if {$print} {
         puts "TCP Variant (Tahoe) ----------------> $tcpVariant"
     }
-}elseif{$tcpVariant eq "Reno"}{
+} elseif {$tcpVariant=="Reno"} {
     set tcp [new Agent/TCP/Reno]
     if {$print} {
         puts "TCP Variant (Reno) ----------------> $tcpVariant"
     }
-}elseif{$tcpVariant eq "NewReno"}{
+} elseif {$tcpVariant=="NewReno"} {
     set tcp [new Agent/TCP/Newreno]
     if {$print} {
         puts "TCP Variant (Newreno) ----------------> $tcpVariant"
     }
-}elseif {$tcpVariant eq "Vegas"}{
+} elseif {$tcpVariant=="Vegas"} {
     set tcp [new Agent/TCP/Vegas]
     if {$print} {
         puts "TCP Variant (Vegas) ----------------> $tcpVariant"
