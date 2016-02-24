@@ -20,83 +20,8 @@
 set ns [new Simulator]
 $ns color 1 Blue
 $ns color 2 Red
-set print 0
+set print 1
 # recieve environment arguments
-if {$argc > 0}
-{
-    if {[lindex $argv 0] == "v"} {
-        set print 1
-        puts "-v is seted -----> $print"      
-    }
-	set tcpVariant [lindex $argv 1]
-    if {$print} {
-        puts "tcpVariant ------------> $tcpVariant"
-    }
-    if {[llength $tcpVariant] == 0}
-    {
-        
-        set tcpVariant Tahoe
-        if {$print} {
-            puts "tcp tcpVariant is not specified"
-            puts "default -----------------> $tcpVariant"
-        }
-    }
-	set CBRRate [lindex $argv 2]
-    if {$print} {
-        puts "CBRRate ------------> $CBRRate"
-    }
-    if {[llength $CBRRate] == 0} {
-        set CBRRate 5
-        if {$print} {
-            puts "tcp CBRRate is not specified"
-            puts "default -----------------> $CBRRate"
-        }
-    }
-	set tcpStartTime [lindex $argv 3]
-    if {$print} {
-        puts "tcpStartTime ------------> $tcpStartTime"
-    }
-    if {[llength $tcpStartTime] == 0} {
-        set tcpStartTime 5
-        if {$print} {
-            puts "tcpStartTime is not specified"
-            puts "default -----------------> $tcpStartTime"
-        }
-    }
-	set tcpEndTime [lindex $argv 4]
-    if {$print} {
-        puts "tcpEndTime ------------> $tcpEndTime"
-    }
-    if {[llength $tcpEndTime] == 0} {
-        set tcpEndTime 5
-        if {$print} {
-            puts "tcpEndTime is not specified"
-            puts "default -----------------> $tcpEndTime"
-        }
-    }
-	set bandwidth [lindex $argv 5]
-    if {$print} {
-        puts "bandwidth ------------> $bandwidth"
-    }
-    if {[llength $bandwidth] == 0} {
-        set bandwidth 5
-        if {$print} {
-            puts "bandwidth is not specified"
-            puts "default -----------------> $bandwidth"
-        }
-    }
-	set delay [lindex $argv 5]
-    if {$print} {
-        puts "delay ------------> $delay"
-    }
-    if {[llength $delay] == 0} {
-        set delay 5
-        if {$print} {
-            puts "delay is not specified"
-            puts "default -----------------> $delay"
-        }
-    }
-}else{
     if {$print} {
         puts "no args entry"
     }
@@ -116,7 +41,7 @@ if {$argc > 0}
     if {$print} {
         puts "parameter setted up"
     }
-}
+
 
 
 
