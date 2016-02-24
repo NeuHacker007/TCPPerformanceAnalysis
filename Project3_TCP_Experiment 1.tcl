@@ -46,12 +46,12 @@ set print 1
 
 
 # generate trace file
-set tracefile [open epr1_result_$(tcpVariant)_$CBRRate_$bandwidth_$delay.tr w]
+set tracefile [open epr1_result_[expr $tcpVariant]_[expr $CBRRate]_[expr $bandwidth]_[expr $delay].tr w]
 $ns trace-all $tracefile
 if {$print} {
         puts "tracefile created"
 }
-set namTracefile [open epr1_result_$(tcpVariant)_$CBRRate_$bandwidth_$delay.nam w]
+set namTracefile [open epr1_result_[expr $tcpVariant]_[expr $CBRRate]_[expr $bandwidth]_[expr $delay].nam w]
 $ns trace-all $namTracefile
 if {$print} {
         puts "namTracefile created"
@@ -156,8 +156,8 @@ if {$print} {
         puts "TCP end time ---------> $tcpEndTime"
 }
 $ns at 0.0 "$cbr start"
-$ns at ${tcpStartTime} "$ftp start"
-$ns at ${tcpEndTime} "$ftp stop"
+$ns at $tcpStartTime "$ftp start"
+$ns at $tcpEndTime "$ftp stop"
 $ns at 20.0 "$cbr stop"
 
 $ns at 20.0 "finish"
