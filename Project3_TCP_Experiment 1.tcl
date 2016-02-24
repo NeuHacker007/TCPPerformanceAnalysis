@@ -31,7 +31,7 @@ set print 1
     # tcpEndTime 20s after NS running
     # bandwidth 10 MB
     # delay 10ms
-    set tcpVariant Tahoe
+    set tcpVariant "Tahoe"
     set CBRRate 5
     set tcpStartTime 5.0
     set tcpEndTime   15.0
