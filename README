@@ -136,9 +136,9 @@ In this case, we are going to judge the influence of chaning queue settings whic
 which are one CBR flow from N5 to N6, TCP flow from N1 to N4. TCP start first 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------- 
-| number	| source node  | destinate node  | bindwidth |  flow Type	|   queue type   | first flow start time  | second flow start time | 	influences 		|  
-| 	1			N5				N6 				10 MB 		CBR			  	 N/A 				0 			  			5s 					experiments results
-| 	2			N1				N4 				10 MB 		TCP			  	 DropTail			0 			  			5s					experiments results
-| 	3			N5				N6 				10 MB 		CBR			  	 N/A 				0 			  			5s 					experiments results	
-| 	4			N1				N4 				10 MB 		TCP			  	 RED 				0 			  			5s					experiments results
------------------------------------------------------------------------------------------------------------------------------------------------------------------  
+| number | source node  | destinate node  | bindwidth |  flow Type	|   queue type   | first flow start time  | second flow start time |influences 		|  
+| 	1		N5			     N6 				10 MB 		CBR			  	 N/A 				0 			  			5s 			experiments results
+| 	2			N1				N4 				10 MB 		TCP			  	 DropTail			0 			  			5s			experiments results
+| 	3			N5				N6 				10 MB 		CBR			  	 N/A 				0 			  			5s 			experiments results	
+| 	4			N1				N4 				10 MB 		TCP			  	 RED 				0 			  			5s			experiments results
+---------------------------------------------------------------------------------------------------------------------------------------------------------- 
